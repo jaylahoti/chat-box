@@ -7,16 +7,18 @@ export default class Layout extends Component {
     super(props);
 
     this.state = {
-      name: "",
+      fullname: "",
       error:""
     };
   }
 
   setUser = ({user, isUser})=>{
+    console.log(user, isUser)
     if(isUser){
       this.setError("User exist")
     }else{
       this.props.setUser(user)
+      this.setError("")
     }
   }
 
@@ -27,16 +29,16 @@ export default class Layout extends Component {
   handleSubmit = (e)=> {
     e.preventDefault()
     const { socket } = this.props;
-    const { name } = this.state;
-    socket.emit(VERIFY_USER, name, this.setUser)
+    const { fullname } = this.state;
+    socket.emit(VERIFY_USER, fullname, this.setUser)
   }
 
   handleChange = (e)=> {
-    this.setState({name:e.target.value})
+    this.setState({fullname:e.target.value})
   }
 
   render() {
-    const { name } = this.state;
+    const { fullname, error } = this.state;
     return (
       <div>
           <form onSubmit={this.handleSubmit}>
@@ -44,7 +46,7 @@ export default class Layout extends Component {
                 <h3> Enter your name? </h3>
             </label>
             <input type="text" ref={(input)=>{ this.textInput = input }}
-            id="Name" value={name} onChange={this.handleChange}
+            id="Name" value={fullname} onChange={this.handleChange}
             placeholder={'Username'}/>
             <div>{error ? error:null}</div>
           </form>
