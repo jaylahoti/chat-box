@@ -36,7 +36,6 @@ export default class SideBar extends Component{
 						className="users"
 						ref='users'
 						onClick={(e)=>{ (e.target === this.refs.user) && setActiveChat(null) }}>
-
 						{
 						chats.map((chat)=>{
 							if(chat.name){
@@ -55,7 +54,9 @@ export default class SideBar extends Component{
 									<div className="user-photo">{chatSideName[0].toUpperCase()}</div>
 									<div className="user-info">
 										<div className="name">{chatSideName}</div>
-										{lastMessage && <div className="last-message">{lastMessage.message}</div>}
+											{lastMessage && <div className="last-message">
+											{lastMessage.audiomessage ? "New Audio Message" : lastMessage.message}
+										</div>}
 									</div>
 
 								</div>

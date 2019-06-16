@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 export default class Messages extends Component {
 	constructor(props) {
 	  super(props);
-
+		console.log(props)
 		this.scrollDown = this.scrollDown.bind(this)
 	}
 
@@ -22,6 +22,7 @@ export default class Messages extends Component {
 
 	render() {
 		const { messages, user, typingUsers } = this.props
+
 		return (
 			<div ref='container'
 				className="thread-container">
@@ -35,7 +36,13 @@ export default class Messages extends Component {
 								>
 									<div className="name">{mes.sender}</div>
 									<div className="data">
-										<div className="message">{mes.message}</div>
+
+										{ mes.audiomessage ?
+										 <audio controls src={mes.message} type="audio/webm" />
+										 :
+										 <div className="message">{mes.message}</div>
+										}
+
 									</div>
 								</div>
 

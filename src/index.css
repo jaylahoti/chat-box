@@ -390,6 +390,26 @@ textarea {
     justify-content: flex-end
 }
 
+.microphone {
+  background-color: #1aa59a;
+  color: white;
+  width: 10%;
+  font-size: 20px;
+  cursor: pointer;
+  outline: none;
+}
+
+.stop-button {
+  background-color: white;
+  color: red;
+  width: 10%;
+  font-size: 25px;
+  padding-top: 7px;
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
 .message-container.right .time {
     order: 2;
     margin-left: 25px
@@ -489,4 +509,18 @@ textarea {
 .message-input .message-form .send:disabled {
     opacity: .2;
     background: #5d5d8a
+}
+
+.microphone:disabled {
+  opacity: .2;
+  background: #5d5d8a;
+}
+
+.stop-button:disabled {
+  opacity: .2;
+  background: #5d5d8a;
+}
+
+audio {
+  outline: none;
 }

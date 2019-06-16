@@ -1,7 +1,7 @@
 const io = require('./index.js').io
 
 const { VERIFY_USER, USER_CONNECTED, USER_DISCONNECTED,
-		LOGOUT, COMMUNITY_CHAT, MESSAGE_RECIEVED, MESSAGE_SENT,
+		LOGOUT, GROUP_CHAT, MESSAGE_RECIEVED, MESSAGE_SENT,
 		TYPING, PRIVATE_MESSAGE  } = require('../Constants')
 
 const uuidv4 = require('uuid/v4')
@@ -15,11 +15,12 @@ const createUser = ({name = "", socketId = null } = {})=>(
 	}
 )
 
-const createMessage = ({message = "", sender = ""} = { })=>(
+const createMessage = ({message = "", audiomessage = false, sender = ""} = { })=>(
 		{
 			id:uuidv4(),
 			message,
-			sender
+			sender,
+			audiomessage
 		}
 
 	)
@@ -90,12 +91,12 @@ module.exports = function(socket){
 	})
 
 	//Get Community Chat
-	socket.on(COMMUNITY_CHAT, (callback)=>{
+	socket.on(GROUP_CHAT, (callback)=>{
 		callback(communityChat)
 	})
 
-	socket.on(MESSAGE_SENT, ({chatId, message})=>{
-		sendMessageToChatFromUser(chatId, message)
+	socket.on(MESSAGE_SENT, ({chatId, message, audiomessage})=>{
+		sendMessageToChatFromUser(chatId, message, audiomessage)
 	})
 
 	socket.on(TYPING, ({chatId, isTyping})=>{
@@ -120,8 +121,8 @@ function sendTypingToChat(user){
 }
 
 function sendMessageToChat(sender){
-	return (chatId, message)=>{
-		io.emit(`${MESSAGE_RECIEVED}-${chatId}`, createMessage({message, sender}))
+	return (chatId, message, audiomessage)=>{
+		io.emit(`${MESSAGE_RECIEVED}-${chatId}`, createMessage({message, sender, audiomessage}))
 	}
 }
 

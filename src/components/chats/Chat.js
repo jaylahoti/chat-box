@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import SideBar from './SideBar'
-import { COMMUNITY_CHAT, MESSAGE_SENT, MESSAGE_RECIEVED, TYPING, PRIVATE_MESSAGE } from '../../Constants'
-import ChatHeading from './ChatHeading'
+import { GROUP_CHAT, MESSAGE_SENT, MESSAGE_RECIEVED, TYPING, PRIVATE_MESSAGE } from '../../Constants'
+import Heading from './Heading'
 import Messages from '../messages/Messages'
 import MessageInput from '../messages/MessageInput'
 
 
-export default class ChatContainer extends Component {
+export default class Chat extends Component {
 	constructor(props) {
 	  super(props);
 
@@ -22,10 +22,10 @@ export default class ChatContainer extends Component {
 	}
 
 	initSocket(socket){
-		socket.emit(COMMUNITY_CHAT, this.resetChat)
+		socket.emit(GROUP_CHAT, this.resetChat)
 		socket.on(PRIVATE_MESSAGE, this.addChat)
 		socket.on('connect', ()=>{
-			socket.emit(COMMUNITY_CHAT, this.resetChat)
+			socket.emit(GROUP_CHAT, this.resetChat)
 		})
 	}
 
@@ -113,9 +113,9 @@ export default class ChatContainer extends Component {
 	*	@param chatId {number}  The id of the chat to be added to.
 	*	@param message {string} The message to be added to the chat.
 	*/
-	sendMessage = (chatId, message)=>{
+	sendMessage = (chatId, message, audiomessage)=>{
 		const { socket } = this.props
-		socket.emit(MESSAGE_SENT, {chatId, message} )
+		socket.emit(MESSAGE_SENT, {chatId, message, audiomessage} )
 	}
 
 	/*
@@ -149,7 +149,7 @@ export default class ChatContainer extends Component {
 						activeChat !== null ? (
 
 							<div className="chat-room">
-								<ChatHeading name={activeChat.name} />
+								<Heading name={activeChat.name} />
 								<Messages
 									messages={activeChat.messages}
 									user={user}
@@ -157,8 +157,8 @@ export default class ChatContainer extends Component {
 									/>
 								<MessageInput
 									sendMessage={
-										(message)=>{
-											this.sendMessage(activeChat.id, message)
+										(message, audiomessage)=>{
+											this.sendMessage(activeChat.id, message, audiomessage)
 										}
 									}
 									sendTyping={

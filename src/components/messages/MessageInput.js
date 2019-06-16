@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { ReactMic } from 'react-mic';
 import { MdSend } from 'react-icons/md';
-import { FaMicrophone } from 'react-icons/fa'
+import { FaMicrophone } from 'react-icons/fa';
+import { FaRegStopCircle } from 'react-icons/fa'
 
 export default class MessageInput extends Component {
 
@@ -9,11 +11,35 @@ export default class MessageInput extends Component {
 
 	  this.state = {
 	  	message:"",
-			audiomessage:"",
+			audiomessage:false,
+			record: false,
 	  	isTyping:false
 	  };
 
 	}
+
+	startRecording = () => {
+	 this.setState({
+		 record: true
+	 });
+ }
+
+ stopRecording = () => {
+	 this.setState({
+		 record: false
+	 });
+ }
+
+ onData(recordedBlob) {
+	 console.log('chunk of real-time data is: ', recordedBlob);
+ }
+
+ onStop = (recordedBlob) => {
+	 this.setState({message: recordedBlob.blobURL, audiomessage:true})
+	 this.sendMessage()
+	 this.setState({message:"", audiomessage:false})
+	 console.log('recordedBlob is: ', recordedBlob);
+ }
 
 	handleSubmit = (e)=>{
 		e.preventDefault()
@@ -22,7 +48,7 @@ export default class MessageInput extends Component {
 	}
 
 	sendMessage = ()=>{
-		this.props.sendMessage(this.state.message)
+		this.props.sendMessage(this.state.message, this.state.audiomessage)
 
 	}
 
@@ -89,10 +115,21 @@ export default class MessageInput extends Component {
 							}
 						}
 						/>
-						
-						<div id="buttons" className = "audio-control">
-							 <button id="start"><FaMicrophone /></button>
-					 </div>
+
+						<ReactMic
+          record={this.state.record}
+          className="sound-wave"
+          onStop={this.onStop}
+          onData={this.onData}
+          strokeColor="#000000"
+          backgroundColor="#FF4081"
+					width="0px" />
+        <button disabled={this.state.record}
+				className="microphone" onClick={this.startRecording}
+				type="button"><FaMicrophone /></button>
+        <button disabled={!this.state.record}
+				className="stop-button" onClick={this.stopRecording}
+				type="button"><FaRegStopCircle /></button>
 
 					<button
 						disabled = { message.length < 1 }
